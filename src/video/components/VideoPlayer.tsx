@@ -1,7 +1,14 @@
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useCallback, useMemo, useRef, useState } from "react";
 
+import {
+  getCaptionUrl,
+  makeCaptionId,
+  parseSubtitles,
+} from "@/backend/helpers/captions";
+import { MWCaption } from "@/backend/helpers/streams";
 import { Transition } from "@/components/Transition";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { useLoading } from "@/hooks/useLoading";
 import { AirplayAction } from "@/video/components/actions/AirplayAction";
 import { BackdropAction } from "@/video/components/actions/BackdropAction";
 import { CastingTextAction } from "@/video/components/actions/CastingTextAction";
@@ -35,6 +42,8 @@ import { DividerAction } from "./actions/DividerAction";
 import { NextEpisodeAction } from "./actions/NextEpisodeAction";
 import { SettingsAction } from "./actions/SettingsAction";
 import { VolumeAdjustedAction } from "./actions/VolumeAdjustedAction";
+import { useMeta } from "../state/logic/meta";
+import { useSource } from "../state/logic/source";
 
 type Props = VideoPlayerBaseProps;
 
@@ -84,6 +93,39 @@ export function VideoPlayer(props: Props) {
     },
     [setShow]
   );
+
+  // const descriptor = useVideoPlayerDescriptor();
+  // const meta = useMeta(descriptor);
+  // const controls = useControls(descriptor);
+
+  // const englishCaption = useMemo(
+  //   () =>
+  //     meta?.captions.find((caption) =>
+  //       caption.langIso.toLowerCase().startsWith("en")
+  //     ),
+  //   [meta]
+  // );
+
+  // const loadingId = useRef<string>("");
+  // const [setCaption, loading, error] = useLoading(
+  //   async (caption: MWCaption, isLinked: boolean) => {
+  //     const id = makeCaptionId(caption, isLinked);
+  //     loadingId.current = id;
+  //     const blobUrl = await getCaptionUrl(caption);
+  //     const result = await fetch(blobUrl);
+  //     const text = await result.text();
+  //     parseSubtitles(text); // This will throw if the file is invalid
+  //     controls.setCaption(id, blobUrl);
+  //     // sometimes this doesn't work, so we add a small delay
+  //     setTimeout(() => {
+  //       controls.closePopout();
+  //     }, 100);
+  //   }
+  // );
+
+  // if (englishCaption) {
+  //   setCaption(englishCaption, true);
+  // }
 
   return (
     <VideoPlayerBase
