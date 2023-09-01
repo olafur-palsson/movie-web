@@ -42,7 +42,7 @@ export function SettingsAction(props: Props) {
   );
 
   const loadingId = useRef<string>("");
-  const [setCaption, loading, error] = useLoading(
+  const [setCAptionAndPlay, loading, error] = useLoading(
     async (caption: MWCaption, isLinked: boolean) => {
       const id = makeCaptionId(caption, isLinked);
       loadingId.current = id;
@@ -51,10 +51,7 @@ export function SettingsAction(props: Props) {
       const text = await result.text();
       parseSubtitles(text); // This will throw if the file is invalid
       controls.setCaption(id, blobUrl);
-      // sometimes this doesn't work, so we add a small delay
-      setTimeout(() => {
-        controls.closePopout();
-      }, 100);
+      controls.play();
     }
   );
 
@@ -65,8 +62,7 @@ export function SettingsAction(props: Props) {
   ) {
     lastEpisode = meta?.episode.episodeId;
     setTimeout(() => {
-      setCaption(englishCaption, true);
-      controls.play();
+      setCAptionAndPlay(englishCaption, true);
     }, 3000);
   }
 
